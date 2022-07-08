@@ -1,0 +1,78 @@
+
+---
+# resource_types:
+# - name: terraform
+#   type: docker-image
+#   source:
+#     repository: ljfranklin/terraform-resource
+#     tag: latest
+
+resources:
+- name: resource-tutorial
+  type: git
+  source:
+    uri: https://github.com/confluentinc/terraform-provider-confluent.git
+    branch: master
+# - name: terraform-confluent
+#   type: terraform
+#   source:
+#     env_name: develop
+#     backend_type: s3
+#     # state is being saved on personal aws account
+#     backend_config:
+#       bucket: dbucket34
+#       key: demopipeline/confluent/terraform.tfstate
+#       region: us-west-1
+#       access_key: ((storage_access_key))
+#       secret_key: ((storage_secret_key))
+#     # vars:
+#     #   tag_name: concourse
+#     env:
+#       AWS_ACCESS_KEY_ID: ((environment_access_key))
+#       AWS_SECRET_ACCESS_KEY: ((environment_secret_key))
+# - name: terraform-druid
+#   type: terraform
+#   source:
+#     env_name: develop
+#     backend_type: s3
+#     # state is being saved on personal aws account
+#     backend_config:
+#       bucket: dbucket34
+#       key: demopipeline/druid/terraform.tfstate
+#       region: us-west-1
+#       access_key: ((storage_access_key))
+#       secret_key: ((storage_secret_key))
+#     # vars:
+#     #   tag_name: concourse
+#     env:
+#       AWS_ACCESS_KEY_ID: ((environment_access_key))
+#       AWS_SECRET_ACCESS_KEY: ((environment_secret_key))
+
+
+jobs:
+  - name: job-test
+    public: true
+    plan:
+      - get: resource-tutorial
+      # Get local druid terraform into the pipeline
+      - task: get-local
+        file: tasks/load-directory.yml
+      # - put: terraform-confluent
+      #   params:
+      #     env_name: develop
+      #     terraform_source: resource-tutorial/examples/configurations/basic-kafka-acls
+      #     plan_only: true
+      #     vars:
+      #       confluent_cloud_api_key: ((confluent_cloud_api_key))
+      #       confluent_cloud_api_secret: ((confluent_cloud_api_secret))
+      # - put: terraform-druid
+      #   inputs:
+      #   - terraform-druid
+      #   params:
+      #     env_name: develop
+      #     terraform_source: ./terraform-druid
+      #     plan_only: true
+          # vars:
+          #   confluent_cloud_api_key: ((confluent_cloud_api_key))
+          #   confluent_cloud_api_secret: ((confluent_cloud_api_secret))
+

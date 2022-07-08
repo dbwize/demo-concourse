@@ -1,0 +1,9 @@
+.DS_Store
+# Terraform dot files
+.terraform
+.terraformrc
+**/.terraform/*
+.terraform.d
+*.tfstate
+*.tfstate.*
+./terraform-druid/.terraform
